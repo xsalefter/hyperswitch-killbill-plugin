@@ -1,0 +1,50 @@
+<!--
+  ~ Copyright 2010-2014 Ning, Inc.
+  ~ Copyright 2014-2020 Groupon, Inc
+  ~ Copyright 2020-2020 Equinix, Inc
+  ~ Copyright 2014-2020 The Billing Project, LLC
+  ~
+  ~ The Billing Project licenses this file to you under the Apache License, version 2.0
+  ~ (the "License"); you may not use this file except in compliance with the
+  ~ License.  You may obtain a copy of the License at:
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  ~ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+  ~ License for the specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<FindBugsFilter>
+    <!-- EI_EXPOSE_REP2: these classes store constructor-injected collaborators/records as-is
+         (config handler, DAO, jOOQ record) without defensive copies. This is the standard
+         Kill Bill plugin pattern (dependency injection / lightweight DTO wrapping a jOOQ
+         record) and is not a real encapsulation risk here. -->
+    <Match>
+        <Class name="org.killbill.billing.plugin.hyperswitch.HyperswitchPaymentPluginApi"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="org.killbill.billing.plugin.hyperswitch.HyperswitchPaymentTransactionInfoPlugin"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- EQ_DOESNT_OVERRIDE_EQUALS: jOOQ-generated code under dao/gen/ (catalog, schema, table
+         classes). These are regenerated from the DB schema and we do not hand-edit them, so
+         we don't add equals() overrides here. -->
+    <Match>
+        <Class name="~org\.killbill\.billing\.plugin\.hyperswitch\.dao\.gen\..*"/>
+        <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    </Match>
+
+    <!-- EQ_DOESNT_OVERRIDE_EQUALS: HyperswitchPaymentTransactionInfoPlugin is hand-written
+         (not generated), but it's a short-lived, immutable result DTO returned from plugin
+         API calls; it is never used as a map/set key or compared for equality elsewhere in
+         this codebase, so omitting equals()/hashCode() is safe here. -->
+    <Match>
+        <Class name="org.killbill.billing.plugin.hyperswitch.HyperswitchPaymentTransactionInfoPlugin"/>
+        <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    </Match>
+</FindBugsFilter>
