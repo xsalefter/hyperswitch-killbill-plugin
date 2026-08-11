@@ -21,8 +21,9 @@ package org.killbill.billing.plugin.hyperswitch;
 
 import java.util.Optional;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 import org.jooby.Result;
 import org.jooby.mvc.GET;
@@ -32,7 +33,6 @@ import org.killbill.billing.plugin.core.resources.PluginHealthcheck;
 import org.killbill.billing.tenant.api.Tenant;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.inject.Inject;
 import com.hyperswitch.client.model.PaymentAttemptResponse;
 
 @Singleton

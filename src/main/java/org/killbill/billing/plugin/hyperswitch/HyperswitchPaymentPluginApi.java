@@ -216,9 +216,8 @@ public class HyperswitchPaymentPluginApi extends
             final UUID kbTransactionId, final UUID kbPaymentMethodId, final BigDecimal amount, final Currency currency,
             final Iterable<PluginProperty> properties, final CallContext context) throws PaymentPluginApiException {
         logger.info("[purchasePayment] calling purchase payment");
-        HyperswitchResponsesRecord hyperswitchRecord = null;
-        String profileId = hyperswitchConfigurationHandler.getConfigurable(context.getTenantId()).getProfileId();
-        PaymentsCreateRequest paymentsCreateRequest = new PaymentsCreateRequest();
+        HyperswitchResponsesRecord hyperswitchRecord;
+        final PaymentsCreateRequest paymentsCreateRequest = new PaymentsCreateRequest();
         paymentsCreateRequest.setAmount(KillBillMoney.toMinorUnits(currency.toString(), amount));
         paymentsCreateRequest.setCurrency(convertCurrency(currency));
         paymentsCreateRequest.confirm(true);
