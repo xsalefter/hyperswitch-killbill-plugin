@@ -2,6 +2,13 @@
 
 Killbill payment plugin to use [Hyperswitch](https://hyperswitch.io/) as a payment orchastrator.
 
+## Kill Bill Compatibility
+
+| Plugin version | Kill Bill version |
+|-----------------|--------------------|
+| 0.2.0           | 0.26.x             |
+
+In 0.2.0, the Java EE `javax` namespace is replaced by the `jakarta` namespace.
 
 ## Requirements
 
