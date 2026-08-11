@@ -22,11 +22,11 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.146.6</version>
+        <version>0.147.20</version>
     </parent>
     <groupId>io.github.juspay.hyperswitchplugin</groupId>
     <artifactId>hyperswitch-killbill-plugin</artifactId>
-    <version>0.1.1</version>
+    <version>0.2.0</version>
     <packaging>bundle</packaging>
     <name>Kill Bill OSGI Hyperswitch bundle</name>
     <description>Kill Bill Hyperswitch plugin</description>
@@ -55,32 +55,43 @@
         </repository>
     </distributionManagement>
     <properties>
-        <check.skip-dependency>true</check.skip-dependency>
-        <check.skip-dependency-scope>true</check.skip-dependency-scope>
-        <check.skip-dependency-versions>true</check.skip-dependency-versions>
-        <check.skip-duplicate-finder>true</check.skip-duplicate-finder>
-        <check.skip-enforcer>true</check.skip-enforcer>
-        <check.skip-rat>true</check.skip-rat>
-        <check.skip-spotbugs>true</check.skip-spotbugs>
+        <check.fail-spotbugs>true</check.fail-spotbugs>
+        <check.spotbugs-exclude-filter-file>spotbugs-exclude.xml</check.spotbugs-exclude-filter-file>
+        <gpg.skip>true</gpg.skip>
         <osgi.private>org.killbill.billing.plugin.hyperswitch.*</osgi.private>
     </properties>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
+        <!-- hyperswitch-java-client's own pom mistakenly declares central-publishing-maven-plugin
+             as a regular <dependency> (in addition to correctly declaring it as a build plugin).
+             This drags in two conflicting transitive versions of commons-io and fails
+             RequireUpperBoundDeps. It is a publish-time-only plugin, not needed at
+             compile/runtime, so we exclude it here. -->
         <dependency>
             <groupId>io.github.juspay.hyperswitch</groupId>
             <artifactId>hyperswitch-java-client</artifactId>
             <version>0.0.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.github.openfeign</groupId>
@@ -88,13 +99,17 @@
             <version>12.5</version>
         </dependency>
         <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -107,8 +122,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jooby</groupId>
-            <artifactId>jooby</artifactId>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.billing</groupId>
@@ -156,6 +171,10 @@
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
+            <artifactId>killbill-jooby</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.kill-bill.commons</groupId>
             <artifactId>killbill-metrics-api</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -163,11 +182,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.sonatype.central</groupId>
-            <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -198,23 +212,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.2</version>
-                <configuration>
-                    <doclint>none</doclint>
-                    <source>1.8</source>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> -->
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
